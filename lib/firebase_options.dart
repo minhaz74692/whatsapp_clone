@@ -3,7 +3,6 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -54,7 +53,8 @@ class DefaultFirebaseOptions {
   }
 
   static FirebaseOptions android = FirebaseOptions(
-    apiKey: dotenv.env['FIREBASEAPIKEY'] ??"",
+    // apiKey: dotenv.env['FIREBASEAPIKEY'] ??"",
+    apiKey: "AIzaSyBvHbdf0aK1gCuE3h915TQwEG-0rG1N9nQ",
     appId: '1:716314513060:android:d7599554e8b5ab75c5e031',
     messagingSenderId: '716314513060',
     projectId: 'whatsapp-clone-b0d32',

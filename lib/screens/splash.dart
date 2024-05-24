@@ -1,8 +1,12 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_clone/constants/app_constant.dart';
-import 'package:whatsapp_clone/screens/homepage.dart';
+import 'package:whatsapp_clone/providers/user_provider.dart';
+import 'package:whatsapp_clone/screens/home.dart';
+import 'package:whatsapp_clone/screens/login.dart';
 import 'package:whatsapp_clone/utils/helper.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -52,7 +56,13 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             Spacer(),
-            Text("from",style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w400),),
+            Text(
+              "from",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400),
+            ),
             Center(
               child: Image.asset(
                 AppConstant.metaIcon,
@@ -69,41 +79,20 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigate() async {
-    // bool result = await InternetConnectionChecker().hasConnection;
+    final UserProvider ub = context.read<UserProvider>();
+    SharedPreferences? sp = await SharedPreferences.getInstance();
 
-    // if (result == true) {
-    Future.delayed(const Duration(seconds: 3), () async {
-      if (!_isDisposed) {
-        Helper.nextScreenCloseOthers(
-          context,
-          HomeScreen(),
-        );
-      }
+    bool? isSignedIn = sp.getBool("isSignedIn");
+    debugPrint(isSignedIn.toString());
+
+    Future.delayed(const Duration(milliseconds: 1500)).then((value) async {
+      ub.getUserData().then((value) async {
+        if (isSignedIn == true) {
+          Helper.nextScreenCloseOthers(context, Home());
+        } else {
+          Helper.nextScreenCloseOthers(context, LogIn());
+        }
+      });
     });
-    // } else {
-    //   Helper.toScreen(context, const NoInternetScreen());
-
-    //   Future.delayed(const Duration(seconds: 5), () {
-    //     if (!_isDisposed) {
-    //       if (Provider.of<AuthProvider>(context, listen: false)
-    //           .getUserToken()
-    //           .isEmpty) {
-    //         Navigator.pushAndRemoveUntil(
-    //           context,
-    //           MaterialPageRoute(builder: (_) => const LoginScreen()),
-    //           (route) => false,
-    //         );
-    //       } else {
-    //         if (!_isDisposed) {
-    //           Navigator.pushAndRemoveUntil(
-    //             context,
-    //             MaterialPageRoute(builder: (_) => const DashboardScreen()),
-    //             (route) => false,
-    //           );
-    //         }
-    //       }
-    //     }
-    //   });
-    // }
   }
 }
